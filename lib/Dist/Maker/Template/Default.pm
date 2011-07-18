@@ -3,11 +3,28 @@ use utf8;
 use Mouse;
 use MouseX::StrictConstructor;
 
+use Dist::Maker::Util qw(run_command);
+
 extends 'Dist::Maker::Base';
 with    'Dist::Maker::Template';
 
+sub dist_init {
+    my($self, $meta) = @_;
+    chdir $meta->{distdir} or return;
+
+    eval {
+        $self->run_command($^X, 'Makefile.PL');
+        $self->run_command($^X, '-MExtUtils::Manifest=mkmanifest',
+            '-e', 'mkmanifest');
+    };
+    chdir '..';
+    die $@ if $@;
+    return;
+}
 
 sub distribution {
+    # empty expression <: :> is used
+    # in order to avoid to confuse PAUSE indexers
     return <<'DIST';
 @@ Makefile.PL
 #!perl
@@ -175,7 +192,7 @@ use strict;
 use warnings;
 : }
 
-our $VERSION = '<: $module.initial_version :>';
+our $<: :>VERSION = '<: $module.initial_version :>';
 
 : block module_code -> { }
 
@@ -184,7 +201,7 @@ our $VERSION = '<: $module.initial_version :>';
 : }
 __END__
 
-=head1 NAME
+<: :>=head1 NAME"
 
 <: $dist.module :> - Perl extention to do something
 
