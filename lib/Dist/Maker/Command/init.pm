@@ -27,9 +27,9 @@ sub run {
         return undef;
     }
 
-    $template //= 'Default';
-
     my $config_data = $self->config_data;
+    $template //= $config_data->{template}{default} // 'Default';
+
     $self->note("running with $distname $template ...\n");
 
     $options->{'no-dist-init'} //= !$config_data->{template}{dist_init};
@@ -63,7 +63,7 @@ sub run {
             distdir  => $distdir,
             module   => $dist->module,
         );
-        $self->config->save_data("$distdir/.dim.pl" => \%meta);
+        $self->config->save_data_to_distconfig($distdir => \%meta);
 
         if(!$options->{'no-dist-init'}) {
             my $t = "Dist::Maker::Template::$template";

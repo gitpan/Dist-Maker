@@ -35,6 +35,7 @@ has data => (
                 name  => '<<YOUR NAME HERE>>',
                 email => '<<YOUR EMAIL ADDRESS HERE>>',
             },
+            namespace => [],
         };
         $config->merge_data($data, $config->user_data);
         return $data;
@@ -77,6 +78,16 @@ has config_file => (
     default  => sub {
         my($config) = @_;
         return $config->path('config.pl');
+    },
+);
+
+has distconfig_file => (
+    is       => 'rw',
+    isa      => 'Str',
+    lazy     => 1,
+    default  => sub {
+        my($config) = @_;
+        return '.dimconfig';
     },
 );
 
@@ -175,10 +186,16 @@ sub save_data {
         chmod 0700, $home or warn "Cannot chmod $home: $!";
     }
 
-    my $header = "# This file is managed by $0.\n";
+    my $header = "#!perl\n" . "# This file is managed by $0.\n";
     $config->save( $file => $header . $config->dump_data($data) )
         or die "Cannot save config file";
     chmod 0600, $file;
+}
+
+sub save_data_to_distconfig {
+    my($config, $distdir, $data) = @_;
+
+    $config->save_data( "$distdir/" . $config->distconfig_file, $data);
 }
 
 
