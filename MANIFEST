@@ -22,6 +22,7 @@ lib/Dist/Maker/Template.pm
 lib/Dist/Maker/Template/Any/Moose.pm
 lib/Dist/Maker/Template/CLI.pm
 lib/Dist/Maker/Template/Default.pm
+lib/Dist/Maker/Template/DefaultMB.pm
 lib/Dist/Maker/Template/Moose.pm
 lib/Dist/Maker/Template/Mouse.pm
 lib/Dist/Maker/Template/XS.pm
