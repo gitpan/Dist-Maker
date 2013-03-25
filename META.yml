@@ -48,4 +48,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: git://github.com/gfx/Dist-Maker.git
-version: 0.07
+version: 0.08
